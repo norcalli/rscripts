@@ -1,6 +1,7 @@
 package rscripts
 
 import (
+	// "../redigo/redis"
 	"github.com/garyburd/redigo/redis"
 )
 
@@ -74,7 +75,7 @@ func GetAllMembers(client redis.Conn, idKey, prefix string) ([]Member, error) {
 
 type HashMember struct {
 	ID    int64
-	Value []string
+	Value []interface{}
 }
 
 func HGetAllMembers(client redis.Conn, idKey, prefix string) ([]HashMember, error) {
@@ -82,6 +83,13 @@ func HGetAllMembers(client redis.Conn, idKey, prefix string) ([]HashMember, erro
 	if err != nil {
 		return nil, err
 	}
+
+	// FIXME: if my changes are accepted, then use this.
+	// var result []HashMember
+	// if err := redis.ScanSlice(reply, &result); err != nil {
+	// 	return nil, err
+	// }
+	// return result, nil
 
 	n := len(reply) / 2
 	result := make([]HashMember, n)

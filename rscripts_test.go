@@ -3,14 +3,24 @@ package rscripts
 import (
 	"fmt"
 	"github.com/garyburd/redigo/redis"
+	// "../redigo/redis"
 	"log"
 	"testing"
 )
+
+type Data struct {
+	Name string `redis:"name"`
+}
 
 func TestGetAllHMembers(t *testing.T) {
 	reply, err := HGetAllMembers(client, "restaurants", "restaurant:")
 	if err != nil {
 		t.Fatal(err)
+	}
+	for _, x := range reply {
+		data := &Data{}
+		redis.ScanStruct(x.Value, data)
+		t.Log(data)
 	}
 	t.Log(reply)
 	t.Log(err)
